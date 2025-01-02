@@ -78,8 +78,30 @@ Webhooks are sent to authorized endpoints configured within your Tebex creator p
 
 Note: The secret key must be your webhook key provided at [https://creator.tebex.io/webhooks/endpoints](https://creator.tebex.io/webhooks/endpoints)
 
-```
+```javascript
+Tebex.webhooks.setSecretKey("your-webhook-secret-key");
 
+let webhook = Webhook.parse("your-received-webhook-json", {
+    "HTTP-X-SIGNATURE": "your-received-signature",
+    "REMOTE_ADDR": "webhook-originating-ip"
+});
+
+// You can check for specific webhook types
+if (webhook.isType(WebhookType.VALIDATION_WEBHOOK)) {
+    // respond to validation webhooks by returning their id
+    let response = {"id": webhook.getId()}
+}
+
+// You can quickly check for types of webhooks with helper functions
+else if (webhook.isTypeOfPayment() || webhook.isTypeOfDispute()) {
+    // subject contains data about the webhook action
+    let subject = webhook.getSubject() as PaymentSubject;
+}
+
+else if (webhook.isTypeOfRecurringPayment()) {
+    let subject = webhook.getSubject() as RecurringPaymentSubject;
+    // etc...
+}
 ```
 
 ### Checkout API
