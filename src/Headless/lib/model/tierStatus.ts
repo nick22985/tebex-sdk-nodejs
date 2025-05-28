@@ -12,20 +12,26 @@
 
 import { RequestFile } from './models';
 
-export class RemoveGiftCardRequest {
-    'cardNumber'?: string;
+export class TierStatus {
+    'id'?: number;
+    'description'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "cardNumber",
-            "baseName": "card_number",
+            "name": "id",
+            "baseName": "id",
+            "type": "number"
+        },
+        {
+            "name": "description",
+            "baseName": "description",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return RemoveGiftCardRequest.attributeTypeMap;
+        return TierStatus.attributeTypeMap;
     }
 }
 

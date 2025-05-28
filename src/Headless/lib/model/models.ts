@@ -1,4 +1,4 @@
-import { localVarRequest } from "../../../tebex-request";
+import localVarRequest from 'request';
 
 export * from './addBasketPackageRequest';
 export * from './applyCreatorCodeRequest';
@@ -21,12 +21,14 @@ export * from './packageResponse';
 export * from './removeBasketPackageRequest';
 export * from './removeGiftCardRequest';
 export * from './revenueShare';
+export * from './tier';
+export * from './tierPendingDowngradePackage';
+export * from './tierStatus';
 export * from './updatePackageQuantityRequest';
 export * from './updateTierRequest';
 export * from './updateTierResponse';
 export * from './webstore';
 export * from './webstoreResponse';
-export * from './webstoreResponseData';
 
 import * as fs from 'fs';
 
@@ -62,12 +64,14 @@ import { PackageResponse } from './packageResponse';
 import { RemoveBasketPackageRequest } from './removeBasketPackageRequest';
 import { RemoveGiftCardRequest } from './removeGiftCardRequest';
 import { RevenueShare } from './revenueShare';
+import { Tier } from './tier';
+import { TierPendingDowngradePackage } from './tierPendingDowngradePackage';
+import { TierStatus } from './tierStatus';
 import { UpdatePackageQuantityRequest } from './updatePackageQuantityRequest';
 import { UpdateTierRequest } from './updateTierRequest';
 import { UpdateTierResponse } from './updateTierResponse';
 import { Webstore } from './webstore';
 import { WebstoreResponse } from './webstoreResponse';
-import { WebstoreResponseData } from './webstoreResponseData';
 
 /* tslint:disable:no-unused-variable */
 let primitives = [
@@ -108,12 +112,14 @@ let typeMap: {[index: string]: any} = {
     "RemoveBasketPackageRequest": RemoveBasketPackageRequest,
     "RemoveGiftCardRequest": RemoveGiftCardRequest,
     "RevenueShare": RevenueShare,
+    "Tier": Tier,
+    "TierPendingDowngradePackage": TierPendingDowngradePackage,
+    "TierStatus": TierStatus,
     "UpdatePackageQuantityRequest": UpdatePackageQuantityRequest,
     "UpdateTierRequest": UpdateTierRequest,
     "UpdateTierResponse": UpdateTierResponse,
     "Webstore": Webstore,
     "WebstoreResponse": WebstoreResponse,
-    "WebstoreResponseData": WebstoreResponseData,
 }
 
 // Check if a string starts with another string without using es6 features
@@ -278,14 +284,14 @@ export interface Authentication {
     /**
     * Apply authentication settings to header and query params.
     */
-    applyToRequest(requestOptions: any): Promise<void> | void;
+    applyToRequest(requestOptions: localVarRequest.Options): Promise<void> | void;
 }
 
 export class HttpBasicAuth implements Authentication {
     public username: string = '';
     public password: string = '';
 
-    applyToRequest(requestOptions: any): void {
+    applyToRequest(requestOptions: localVarRequest.Options): void {
         requestOptions.auth = {
             username: this.username, password: this.password
         }
@@ -295,7 +301,7 @@ export class HttpBasicAuth implements Authentication {
 export class HttpBearerAuth implements Authentication {
     public accessToken: string | (() => string) = '';
 
-    applyToRequest(requestOptions: any): void {
+    applyToRequest(requestOptions: localVarRequest.Options): void {
         if (requestOptions && requestOptions.headers) {
             const accessToken = typeof this.accessToken === 'function'
                             ? this.accessToken()
@@ -311,7 +317,7 @@ export class ApiKeyAuth implements Authentication {
     constructor(private location: string, private paramName: string) {
     }
 
-    applyToRequest(requestOptions: any): void {
+    applyToRequest(requestOptions: localVarRequest.Options): void {
         if (this.location == "query") {
             (<any>requestOptions.qs)[this.paramName] = this.apiKey;
         } else if (this.location == "header" && requestOptions && requestOptions.headers) {
@@ -330,7 +336,7 @@ export class ApiKeyAuth implements Authentication {
 export class OAuth implements Authentication {
     public accessToken: string = '';
 
-    applyToRequest(requestOptions: any): void {
+    applyToRequest(requestOptions: localVarRequest.Options): void {
         if (requestOptions && requestOptions.headers) {
             requestOptions.headers["Authorization"] = "Bearer " + this.accessToken;
         }
@@ -341,9 +347,9 @@ export class VoidAuth implements Authentication {
     public username: string = '';
     public password: string = '';
 
-    applyToRequest(_: any): void {
+    applyToRequest(_: localVarRequest.Options): void {
         // Do nothing
     }
 }
 
-export type Interceptor = (requestOptions: any) => (Promise<void> | void);
+export type Interceptor = (requestOptions: localVarRequest.Options) => (Promise<void> | void);
