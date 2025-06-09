@@ -11,7 +11,7 @@
  */
 
 
-import localVarRequest from 'request';
+import { localVarRequest } from "../../../tebex-request";
 import http from 'http';
 
 /* tslint:disable:no-unused-locals */

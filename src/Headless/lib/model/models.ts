@@ -1,4 +1,4 @@
-import localVarRequest from 'request';
+import { localVarRequest } from "../../../tebex-request";
 
 export * from './addBasketPackageRequest';
 export * from './applyCreatorCodeRequest';
