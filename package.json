@@ -1,6 +1,6 @@
 {
   "name": "tebex-sdk-nodejs",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Gaming payments done right - Tebex is the monetization platform designed to grow your gaming revenue streams",
   "main": "dist/index.js",
   "scripts": {

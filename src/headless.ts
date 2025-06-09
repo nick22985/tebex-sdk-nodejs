@@ -1,5 +1,3 @@
-
-
 import {BasketFacade} from "./Headless/basketFacade";
 import {HeadlessApi} from "./Headless/lib/api/headlessApi";
 import {Webstore} from "./Headless/lib/model/webstore";
@@ -14,6 +12,7 @@ import {IncomingMessage} from "node:http";
 import {BasketAuthResponseInner} from "./Headless/lib/model/basketAuthResponseInner";
 import {Package} from "./Headless/lib/model/package";
 import {Category} from "./Headless/lib/model/category";
+import {UpdateTierResponse} from "./Headless/lib/model/updateTierResponse";
 
 /**
  * TebexHeadless allows you to access and create baskets for your Tebex project using pre-defined packages.
@@ -46,7 +45,7 @@ export class Headless {
         this._publicToken = publicToken;
         this._headlessApi = new HeadlessApi("https://headless.tebex.io/api");
         return this._headlessApi.getWebstoreById(this._publicToken).then(({ body }: { response: IncomingMessage; body: WebstoreResponse }):TebexProject => {
-            this._webstore = body.data?.schema!;
+            this._webstore = body.data!;
             return new TebexProject(this._webstore);
         })
     }
@@ -214,6 +213,51 @@ export class Headless {
             cardNumber: cardNumber
         });
         return body.data!;
+    }
+
+    /**
+     * Retrieves a list of tiered categories specific to a given user. The category will contain an active_tier if the
+     * user has purchased any tier in the category.
+     *
+     * @param {number} usernameId - The username ID (steam64) of the user to check tiers.
+     * @return {Promise<Category[]>} An array containing tiered category data for the specified user.
+     */
+    async getTieredCategoriesForUser(usernameId: number) : Promise<Category[]> {
+        const {body} = await this._headlessApi.getTieredCategoriesForUser(this._publicToken, usernameId);
+        return body.data!;
+    }
+
+    /**
+     * Retrieves a list of tiered categories from all available categories.
+     *
+     * @return An array of tiered categories.
+     */
+    async getTieredCategories() : Promise<Category[]> {
+        return await this.getAllCategories().then(
+            categories => {
+                let tieredCategories: Category[] = [];
+                for (const category of categories) {
+                    if (category.tiered) {
+                        tieredCategories.push(category);
+                    }
+                }
+                return tieredCategories;
+            }
+        );
+    }
+
+    /**
+     * Updates the tier of a user or entity to a new package.
+     *
+     * @param {number} tierId - The ID of the current tier to be updated.
+     * @param {number} newTierPackageId - The ID of the new package to update the tier to.
+     * @return Status response object containing the result of the update
+     */
+    async updateTier(tierId: number, newTierPackageId: number) : Promise<UpdateTierResponse> {
+        const {body} = await this._headlessApi.updateTier(this._publicToken, tierId, {
+            packageId: newTierPackageId
+        });
+        return body!;
     }
 
     /**

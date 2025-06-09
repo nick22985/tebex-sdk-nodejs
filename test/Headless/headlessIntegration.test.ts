@@ -15,6 +15,10 @@ import http from "http";
 describe("Headless", () => {
     let headless: Headless;
 
+    // replace with your own values
+    let testUserId: number = 76561198042467022;
+    let testTierId: number = 40796;
+
     beforeEach(() => {
         headless = Tebex.headless;
     });
@@ -206,4 +210,29 @@ describe("Headless", () => {
             { cardNumber: mockCardNumber }
         );
     });
+
+    test("getTieredCategories() should return tiered categories", async () => {
+        const result = await headless.getTieredCategories();
+
+        result.forEach(category => {
+            // ensure each category returned is tiered
+            expect(category.tiered).toBe(true);
+        })
+    })
+
+    // requires basic auth
+    test("getTieredCategoriesForUser() should return tiered categories for a user", async () => {
+        const result = await headless.getTieredCategoriesForUser(testUserId)
+        result.forEach(category => {
+            expect(category).not.toBeNull();
+        })
+    })
+
+    // requires basic auth
+    test("updateTier() should update the tier to a new package", async () => {
+        headless.getHeadlessApi()
+        const result = await headless.updateTier(testUserId, testTierId)
+        expect(result).not.toBeNull();
+        expect(result.success).toBe(true);
+    })
 });
