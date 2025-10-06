@@ -37,15 +37,8 @@ const request = require('@cypress/request');
  *     }
  * });
  */
-export function localVarRequest(incomingRequestOptions: {
-    method: string;
-    qs: any;
-    headers: any;
-    uri: string;
-    useQuerystring: boolean;
-    json: boolean;
-    body: any;
-} | any, callback: (error: any, response: any, body: any) => void) {
+
+export function localVarRequest(incomingRequestOptions: localVarRequest.Options, callback: (error: any, response: any, body: any) => void) {
     const requestOptions = {
         auth: incomingRequestOptions.auth,
         method: incomingRequestOptions.method,
@@ -54,15 +47,11 @@ export function localVarRequest(incomingRequestOptions: {
         json: incomingRequestOptions.json === true,
         qs: incomingRequestOptions.qs,
         body: incomingRequestOptions.body,
+        form: incomingRequestOptions.form,
     };
 
     if (incomingRequestOptions.useQuerystring && incomingRequestOptions.qs) {
         requestOptions.qs = incomingRequestOptions.qs;
-    }
-
-    // Add body if provided
-    if (incomingRequestOptions.body !== undefined) {
-        requestOptions.body = incomingRequestOptions.body;
     }
 
     // Use cypress request library to complete the request as needed
@@ -70,4 +59,18 @@ export function localVarRequest(incomingRequestOptions: {
         // Invoke the provided callback with the results
         callback(error, response, body);
     });
+}
+
+export namespace localVarRequest {
+    export interface Options {
+        method: string;
+        qs: any;
+        headers: any;
+        uri: string;
+        useQuerystring: boolean;
+        json: boolean;
+        body?: any;
+        auth?: any;
+        form?: any;
+    }
 }
