@@ -1,4 +1,4 @@
-import { Webhooks } from "../../src/Webhooks";
+import { Webhooks } from "../../src/webhooks";
 import { Webhook } from "../../src/Webhook/webhook";
 
 describe("Webhooks", () => {

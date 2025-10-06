@@ -1,4 +1,4 @@
-import { Headless } from "../../src/Headless";
+import { Headless } from "../../src/headless";
 import { HeadlessApi } from "../../src/Headless/lib/api/headlessApi";
 import { Basket } from "../../src/Headless/lib/model/basket";
 import { WebstoreResponse } from "../../src/Headless/lib/model/webstoreResponse";
